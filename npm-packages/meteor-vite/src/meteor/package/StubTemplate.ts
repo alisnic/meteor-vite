@@ -12,8 +12,8 @@ export const TEMPLATE_GLOBAL_KEY = 'g'
  * proxy between Vite and Meteor's modules.
  */
 export function stubTemplate({ requestId, meteorPackage, importPath, stubValidation: validationSettings }: { requestId: string; stubValidation?: StubValidationSettings; meteorPackage: MeteorPackage; importPath?: string }) {
-  const stubId = getStubId()
   const { packageId } = meteorPackage
+  const stubId = packageId.replaceAll('/', '_')
   const submodule = meteorPackage.getModule({ importPath })
   const serializedPackage = meteorPackage.serialize({ importPath })
   const fullImportPath = submodule?.fullImportPath || packageId
@@ -115,13 +115,4 @@ function stubValidationTemplate({ settings, requestId, exportKeys, packageId }: 
     importString,
     validateStub,
   }
-}
-
-/**
- * Unique ID for the next stub.
- * @type {number}
- */
-let nextStubId = 0
-function getStubId() {
-  return nextStubId++
 }
